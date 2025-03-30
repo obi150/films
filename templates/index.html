@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Navigation & Icons</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header>
+        <div class="container">
+            <h3 class="logo">MovieVerse</h3>
+
+            <nav>
+                <ul>
+                    <li><a href="/main">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="/search">Search Films</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="film-container">
+        {% if films %}
+        <!-- Featured Film (Big One) -->
+        <div class="featured-film">
+            <a href="{{ url_for('film_page', film_id=films[0].id) }}">
+                <img src="{{ films[0].poster_url }}" alt="{{ films[0].title }}">
+                <h3>{{ films[0].title }}</h3>
+            </a>
+        </div>
+
+        <!-- Small Films in Horizontal List -->
+        <div class="film-list">
+            {% for film in films[1:] %} <!-- Start from the second film -->
+            <div class="film-card">
+                <a href="{{ url_for('film_page', film_id=film.id) }}">
+                    <img src="{{ film.poster_url }}" alt="{{ film.title }}">
+                    <h3>{{ film.title }}</h3>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p>No films available.</p>
+        {% endif %}
+    </div>
+
+</body>
+</html>

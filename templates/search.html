@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Films</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h3 class="logo">MovieVerse</h3>
+
+            <nav>
+                <ul>
+                    <li><a href="/main">Home</a></li>
+                    <li><a href="#">About</a></li>
+                    <li><a href="/search">Search Films</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="search-container">
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <form method="GET" action="/search">
+                <input type="text" name="query" placeholder="Search by title..." value="{{ request.args.get('query') }}">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+
+        <!-- Genre Buttons -->
+        <div class="button-container">
+            <button class="genre-button" onclick="location.href='/search?genre=Comedy'">&#128514;&nbsp;Comedy</button>
+            <button class="genre-button" onclick="location.href='/search?genre=Action'">&#128299;&nbsp;Action</button>
+            <button class="genre-button" onclick="location.href='/search?genre=Sci-fi'">&#128640;&nbsp;Sci-fi</button>
+        </div>
+    </div>
+
+    <div class="search-film-container">
+        {% for film in films %}
+        <div class="search-film-card">
+            <a href="{{ url_for('film_page', film_id=film.id) }}">
+                <img src="{{ film.poster_url }}" alt="{{ film.title }}">
+                <h3>{{ film.title }}</h3>
+            </a>
+        </div>
+        {% else %}
+        <p>No films found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>
+
