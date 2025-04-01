@@ -6,6 +6,7 @@
     <title>Search Films</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='favorite.js') }}"></script>
 </head>
 <body>
     <header>
@@ -15,9 +16,9 @@
             <nav>
                 <ul>
                     <li><a href="/main">Home</a></li>
-                    <li><a href="#">About</a></li>
+                    <li><a href="/favorites">Favorites</a></li>
                     <li><a href="/search">Search Films</a></li>
-                    <li><a href="#">Contact</a></li>
+                    <li><a href="/search-actor">Actors</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
             </nav>
@@ -48,6 +49,13 @@
                 <img src="{{ film.poster_url }}" alt="{{ film.title }}">
                 <h3>{{ film.title }}</h3>
             </a>
+            <button id="fav-btn-{{ film.id }}" class="favorite-btn" onclick="toggleFavorite({{ film.id }})">
+                {% if film.id in user_favorites %}
+                &#128153;  <!-- Filled heart if already favorited -->
+                {% else %}
+                &#10084;  <!-- Empty heart if not favorited -->
+                {% endif %}
+            </button>
         </div>
         {% else %}
         <p>No films found.</p>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Actors</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h3 class="logo">MovieVerse</h3>
+
+            <nav>
+                <ul>
+                    <li><a href="/main">Home</a></li>
+                    <li><a href="/favorites">Favorites</a></li>
+                    <li><a href="/search">Search Films</a></li>
+                    <li><a href="/search-actor">Actors</a></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div class="search-bar">
+        <form method="GET" action="/search-actor">
+            <input type="text" name="query" placeholder="Search by title..." value="{{ request.args.get('query') }}">
+            <button type="submit">Search</button>
+        </form>
+    </div>
+
+    <div class="search-actor-container">
+        {% for actor in actors %}
+        <div class="search-actor-card">
+            <a href="{{ url_for('actor_page', actor_id=actor.id) }}">
+                <img src="{{ actor.photo_url }}" alt="{{ actor.name }}">
+                <h3>{{ actor.name }}</h3>
+            </a>
+        </div>
+        {% else %}
+        <p>No actors found.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

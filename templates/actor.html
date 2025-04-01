@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ film.title }}</title>
+    <title>{{ actor.name }}</title>
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
         }
 
         /* Film Container */
-        .film-container {
+        .actor-container {
             width: 80%;
             max-width: 900px;
             margin-left: 50px; /* Adjust as needed */
@@ -41,55 +41,17 @@
             font-size: 32px;
         }
 
-        /* Favorite Button */
-        .favorite-btn {
-            position: relative;
-            left: 0;
-            margin-bottom: 10px;
-        }
-
         /* Film Details */
-        .film-details {
+        .actor-details {
             text-align: left;
             font-size: 18px;
             line-height: 1.5;
         }
 
-        /* Film Description */
-        .film-description {
-            text-align: left;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        /* Trailer Button */
-        .trailer-button {
-            display: inline-block;
-            text-decoration: none;
-            background: #5B86E5;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: white;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-            .trailer-button:hover {
-                background: #36D1DC;
-            }
-
         /* Actor Section */
         h2 {
             text-align: left;
             font-size: 26px;
-        }
-
-        /* Actor Cards */
-        .search-actor-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            justify-content: flex-start; /* Align actors to the left */
         }
 
         /* Back Home Link */
@@ -102,8 +64,6 @@
         }
     </style>
 
-    <!-- JavaScript File -->
-    <script src="{{ url_for('static', filename='favorite.js') }}" defer></script>
 </head>
 <body>
     <header>
@@ -122,44 +82,25 @@
         </div>
     </header>
 
-    <div class="film-container">
-        <h1>{{ film.title }}</h1>
+    <div class="actor-container">
+        <h1>{{ actor.name }}</h1>
 
-        <!-- Favorite Button -->
-        <button id="fav-btn-{{ film.id }}" class="favorite-btn" onclick="toggleFavorite({{ film.id }})">
-            {% if film.id in user_favorites %}
-            &#128153; <!-- Filled heart -->
-            {% else %}
-            &#10084; <!-- Empty heart -->
-            {% endif %}
-        </button>
-
-        <!-- Movie Poster -->
-        <div class="featured-film">
-            <img src="{{ film.poster_url }}" alt="{{ film.title }}">
+        <div class="search-actor-card">
+            <img src="{{ actor.photo_url }}" alt="{{ actor.name }}">
         </div>
 
         <!-- Film Details -->
-        <p class="film-details">
-            <strong>Released:</strong> {{ film.release_year }} <br>
-            <strong>Genre:</strong> {{ film.genre }} <br>
-            <strong>Rating:</strong> {{ film.rating }}/5 <br>
-            <strong>Director:</strong> {{ film.director }}
+        <p class="actor-details">
+            <strong>Age:</strong> {{ actor.age }} <br>
+            <strong>Birthday:</strong> {{ actor.birthday }} <br>
         </p>
 
-        <!-- Description -->
-        <p class="film-description">{{ film.description }}</p>
-
-        <!-- Trailer Link -->
-        <a href="{{ film.trailer_url }}" class="trailer-button">Watch Trailer</a>
-
-        <!-- Actor Section -->
-        <h2>Actors:</h2>
-        <div class="search-actor-container">
-            {% for actor in actors %}
-            <a href="{{ url_for('actor_page', actor_id=actor.id) }}" class="search-actor-card">
-                <img src="{{ actor.photo_url }}" alt="{{ actor.name }}">
-                <h3>{{ actor.name }}</h3>
+        <h2>Films:</h2>
+        <div class="search-film-container">
+            {% for film in films %}
+            <a href="{{ url_for('film_page', film_id=film.id) }}" class="search-film-card">
+                <img src="{{ film.poster_url }}" alt="{{ film.title }}">
+                <h3>{{ film.title }}</h3>
             </a>
             {% endfor %}
         </div>

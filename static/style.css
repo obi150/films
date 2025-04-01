@@ -204,7 +204,7 @@ body {
 
 .film-card {
     position: relative;
-    min-width: 150px; /* Ensures each film has enough space */
+    width: 150px; /* Ensures each film has enough space */
     height: 220px;
     overflow: hidden;
     border-radius: 10px;
@@ -264,11 +264,17 @@ body {
     background-color: #ddd;
 }
 
-
+.search-film-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 20px;
+}
 /* Film Card Styles */
 .search-film-card {
     position: relative;
-    width: 100%;
+    width: 204px;
     height: 300px; /* Adjust based on your preference */
     overflow: hidden;
     border-radius: 10px;
@@ -362,3 +368,70 @@ body {
     .genre-button:hover {
         background-color: #000;
     }
+
+.favorite-btn {
+    position: absolute;
+    top: 10px;
+    right: 0px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+    .favorite-btn:hover {
+        transform: scale(1.2);
+    }
+
+.search-actor-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    justify-content: center;
+    padding: 20px;
+}
+/* actor Card Styles */
+.search-actor-card {
+    position: relative;
+    width: 204px;
+    height: 300px; /* Adjust based on your preference */
+    overflow: hidden;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4; /* Background for the film card */
+}
+
+    .search-actor-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .search-actor-card h3 {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        margin: 0;
+        font-size: 18px;
+        opacity: 0;
+        transition: opacity 0.3s ease-in-out;
+    }
+
+    /* Hover effects */
+    .search-actor-card:hover img {
+        transform: scale(1.1); /* Zoom effect */
+    }
+
+    .search-actor-card:hover h3 {
+        opacity: 1;
+

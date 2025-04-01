@@ -3,14 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieVerse</title>
+    <title>Favorite Films</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <script src="{{ url_for('static', filename='favorite.js') }}"></script>
 </head>
 <body>
-
     <header>
         <div class="container">
             <h3 class="logo">MovieVerse</h3>
@@ -19,7 +17,7 @@
                 <ul>
                     <li><a href="/main">Home</a></li>
                     <li><a href="/favorites">Favorites</a></li>
-                    <li><a href="/search">Films</a></li>
+                    <li><a href="/search">Search Films</a></li>
                     <li><a href="/search-actor">Actors</a></li>
                     <li><a href="/logout">Logout</a></li>
                 </ul>
@@ -27,27 +25,10 @@
         </div>
     </header>
 
-    <div class="film-container">
-        {% if films %}
-        <!-- Featured Film (Big One) -->
-        <div class="featured-film">
-            <a href="{{ url_for('film_page', film_id=films[0].id) }}">
-                <img src="{{ films[0].poster_url }}" alt="{{ films[0].title }}">
-                <h3>{{ films[0].title }}</h3>
-            </a>
-            <button id="fav-btn-{{ films[0].id }}" class="favorite-btn" onclick="toggleFavorite({{ films[0].id }})">
-                {% if films[0].id in user_favorites %}
-                &#128153;  <!-- Filled heart if already favorited -->
-                {% else %}
-                &#10084  <!-- Empty heart if not favorited -->
-                {% endif %}
-            </button>
-        </div>
-
-        <!-- Small Films in Horizontal List -->
-        <div class="film-list">
-            {% for film in films[1:] %} <!-- Start from the second film -->
-            <div class="film-card">
+    <div class="search-film-container">
+        {% for film in films %}
+            {% if film.id in user_favorites %}
+            <div class="search-film-card">
                 <a href="{{ url_for('film_page', film_id=film.id) }}">
                     <img src="{{ film.poster_url }}" alt="{{ film.title }}">
                     <h3>{{ film.title }}</h3>
@@ -60,12 +41,9 @@
                     {% endif %}
                 </button>
             </div>
-            {% endfor %}
-        </div>
-        {% else %}
-        <p>No films available.</p>
-        {% endif %}
+            {% endif %}
+        {% endfor %}
     </div>
-
 </body>
 </html>
+
