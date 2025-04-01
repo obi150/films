@@ -100,7 +100,7 @@ def signup():
             return render_template('signup.html', error="Passwords do not match.")
 
         existing_user = User.query.filter_by(username=username).first()
-        if existing_user:
+        if existing_user: # Nem engedi hogy két ugyanolyan username legyen
             return render_template('signup.html', error="Username already taken.")
 
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8') # cryptálja és menti a felhasználót
@@ -108,7 +108,7 @@ def signup():
         db.session.add(new_user)
         db.session.commit()
 
-        return redirect(url_for('login')) #
+        return redirect(url_for('login')) # Visszairányítja a login pagera
 
     return render_template('signup.html')
 
@@ -168,7 +168,10 @@ def search():
 def search_actor():
     user = User.query.filter_by(username=session['username']).first()
     query = request.args.get('query')
-    actors = Actor.query.filter(Actor.name.ilike(f'%{query}%')).all()  # Fetch all actors if no query is provided
+    if query:
+        actors = Actor.query.filter(Actor.name.ilike(f'%{query}%')).all()  # Fetch all actors if no query is provided
+    else
+        actors = Actor.query.all()
 
     return render_template('search_actor.html', actors=actors)
 
