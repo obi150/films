@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_bcrypt import Bcrypt
 from flask_migrate import Migrate
@@ -110,81 +110,87 @@ def signup():
 
         return redirect(url_for('login')) # Visszairányítja a login pagera
 
-    return render_template('signup.html')
+    return render_template('signup.html') # Betölti a signup.html file-t
 
+# Main page
 @app.route('/main')
 @login_required
 def index():
-    user = User.query.filter_by(username=session['username']).first()
-    films = Film.query.all()
+    user = User.query.filter_by(username=session['username']).first() # A jelenleg bejelentkezet user betöltése
+    films = Film.query.all() # filmek betöltése
 
-    # Get the list of film IDs the user has favorited
+    # kedvencek betöltése
     user_favorites = [fav.film_id for fav in user.favorites]
 
-    return render_template('index.html', films=films, user_favorites=user_favorites)
+    return render_template('index.html', films=films, user_favorites=user_favorites) # index.html betöltése
 
-
+# Filmek id szerint való betöltése betöltése
 @app.route('/film/<int:film_id>')
 @login_required
 def film_page(film_id):
-    user = User.query.filter_by(username=session['username']).first()
-    user_favorites = [fav.film_id for fav in user.favorites]
-    film = Film.query.get_or_404(film_id)
+    user = User.query.filter_by(username=session['username']).first() # A jelenleg bejelentkezet user betöltése
+    user_favorites = [fav.film_id for fav in user.favorites]# kedvencek betöltése
+    film = Film.query.get_or_404(film_id)# film betöltése
 
-    return render_template('film.html', film=film, actors=film.actors, user_favorites=user_favorites)
+    return render_template('film.html', film=film, actors=film.actors, user_favorites=user_favorites) # film.html betöltése
 
 
+# Szereplők id szerinti betöltése
 @app.route('/actor/<int:actor_id>')
 @login_required
 def actor_page(actor_id):
-    actor = Actor.query.get_or_404(actor_id)
+    actor = Actor.query.get_or_404(actor_id) # jelenlegi szinész betöltése
     
-    # Get all films where the actor starred
+    # minden film amiben játszott
     films = Film.query.join(FilmActor).filter(FilmActor.actor_id == actor.id).all()
 
-    return render_template('actor.html', actor=actor, films=films)
+    return render_template('actor.html', actor=actor, films=films) # actor.html betöltése a paraméterekkel
 
+# Search page
 @app.route('/search', methods=['GET', 'POST'])
 @login_required
 def search():
     user = User.query.filter_by(username=session['username']).first()
     user_favorites = [fav.film_id for fav in user.favorites]
-    genre = request.args.get('genre')  # Get genre filter if available
-    query = request.args.get('query')  # Get search query if available
+    genre = request.args.get('genre')  # genre filter
+    query = request.args.get('query')  # A keresőbe beírt szöveg
 
-    # If a genre is specified, filter by genre
+    # Ha van megadott genre
     if genre:
         films = Film.query.filter_by(genre=genre).all()
-    # If a search query is provided, search by title
+    # ha van megadott film cím amit keresnek
     elif query:
         films = Film.query.filter(Film.title.ilike(f'%{query}%')).all()
     else:
-        films = Film.query.all()  # Fetch all films if no filters are applied
+        films = Film.query.all()  # Minden film betöltése
 
-    return render_template('search.html', films=films, user_favorites=user_favorites)
+    return render_template('search.html', films=films, user_favorites=user_favorites) # serach.html betöltése
 
+# Search-Actor page
 @app.route('/search-actor', methods=['GET', 'POST'])
 @login_required
 def search_actor():
     user = User.query.filter_by(username=session['username']).first()
-    query = request.args.get('query')
+    query = request.args.get('query') # Keresett szöveg
     if query:
-        actors = Actor.query.filter(Actor.name.ilike(f'%{query}%')).all()  # Fetch all actors if no query is provided
-    else
+        actors = Actor.query.filter(Actor.name.ilike(f'%{query}%')).all()  # A keresett szereplők betöltése
+    else:
         actors = Actor.query.all()
 
     return render_template('search_actor.html', actors=actors)
 
+# Kedvencek page
 @app.route('/favorites', methods=['GET', 'POST'])
 @login_required
 def your_favorites():
     user = User.query.filter_by(username=session['username']).first()
-    user_favorites = [fav.film_id for fav in user.favorites]
+    user_favorites = [fav.film_id for fav in user.favorites] # kedvenc filmek id-ja
     films = Film.query.all()
 
-    return render_template('favorites.html', films=films, user_favorites=user_favorites)
+    return render_template('favorites.html', films=films, user_favorites=user_favorites) # favorites.html betöltése és paraméterek átadása
 
 
+# Filmek bekedvencezése
 @app.route('/favorite', methods=['POST'])
 @login_required
 def toggle_favorite():
@@ -197,19 +203,19 @@ def toggle_favorite():
     if existing_favorite:
         db.session.delete(existing_favorite)
         db.session.commit()
-        return jsonify({"success": True, "favorited": False})  # Unfavorited
+        return jsonify({"success": True, "favorited": False})  # nem kedvencezés ha már kedvenc
 
     new_favorite = Favorite(user_id=user.id, film_id=film_id)
     db.session.add(new_favorite)
     db.session.commit()
-    return jsonify({"success": True, "favorited": True})  # Favorited
+    return jsonify({"success": True, "favorited": True})  # bekedvencezés
 
 
-
+# Logout
 @app.route('/logout')
 def logout():
-    session.clear()  # Clears ALL session data
+    session.clear()  # Kitöröljük a jelenleki bejelentkezést
     return redirect(url_for('login'))
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) # app futtatása
